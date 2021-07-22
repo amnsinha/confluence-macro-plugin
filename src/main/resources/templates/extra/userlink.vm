@@ -1,0 +1,4 @@
+#* @vtlvariable name="userName" type="java.lang.String" *#
+<ac:link>
+    <ri:user ri:username="$userName"/>
+</ac:link>

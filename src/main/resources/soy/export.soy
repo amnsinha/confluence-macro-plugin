@@ -1,0 +1,28 @@
+{namespace Confluence.Templates.Multivote}
+/**
+ */
+{template .csvExport}
+<div class="multivote-csv-dialog">
+    <form action="javascript:void(0)" method="post" class="aui unsectioned">
+        <fieldset>
+            <div class="field-group">
+                <label for="separator"/>{getText('com.tngtech.confluence.plugin.multivote.separator')}</label>
+                <input class="text" type="text" name="separator" value=";"/>
+            </div>
+        </fieldset>
+        <fieldset>
+            <div class="field-group">
+                <label for="quote-character"/>{getText('com.tngtech.confluence.plugin.multivote.quoteCharacter')}</label>
+                <input class="text" type="text" name="quote-character" value='"' />
+            </div>
+        </fieldset>
+        <fieldset class="group">
+            <div class="checkbox">
+                <input class="checkbox" type="checkbox" name="headers"/>
+                <label for="headers"/>{getText('com.tngtech.confluence.plugin.multivote.includeHeaders')}</label>
+            </div>
+        </fieldset>
+    </form>
+    <textarea class="textarea" name="csvtext" id="csvtext"></textarea></div>
+</div>
+{/template}

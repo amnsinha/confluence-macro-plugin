@@ -1,0 +1,10 @@
+test toggle and csv export
+
+Geb:
+* add "wait: true" to dynamically added content
+* use rest api for some stuff, e.g. deleting/creating pages, re-setting the vote(s) (instead of re-creating the page)
+
+Test MultivoteMacro.buildItemsFromBody
+
+- need user in test
+- parameter

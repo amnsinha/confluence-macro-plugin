@@ -1,0 +1,147 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="TNG Technology Consulting GmbH" url="http://www.tngtech.com" />
+        <param name="plugin-logo">images/pluginLogo.png</param>
+        <param name="plugin-icon">images/pluginIcon.png</param>
+        <param name="vendor-icon">images/tngVendorIcon.png</param>
+        <param name="vendor-logo">images/tngVendorLogo.png</param>
+        <param name="atlassian-data-center-compatible">true</param>
+    </plugin-info>
+
+    <resource type="i18n" name="i18n" location="MultivoteI18N" />
+    <resource key="images" name="images/" type="download" location="images" />
+
+    <xhtml-macro name='multivote' class='${project.groupId}.MultivoteMacro'
+        key='multivote'
+        icon="/download/resources/${project.groupId}.${project.artifactId}/images/pluginLogo.png"
+        documentation-url='https://tngtech-oss.atlassian.net/wiki/display/MV/Usage'
+        hide-body='false'>
+        <device-type>mobile</device-type>
+        <resource type="velocity" name="help" location="templates/multivote-help.vm">
+            <param name="help-section" value="tables"/>
+        </resource>
+        <category name="confluence-content"/>
+        <parameters>
+            <parameter name="id" type="string" required="true">
+                <alias name=""/>
+            </parameter>
+            <parameter name="sort" type="boolean" required="false" />
+            <parameter name="resultHeaderName" type="string" required="false" />
+            <parameter name="audienceHeaderName" type="string" required="false" />
+            <parameter name="voteHeaderName" type="string" required="false" />
+            <parameter name="maxUserVotes" type="int" required="false" />
+            <parameter name="maxItemVotes" type="int" required="false" />
+        </parameters>
+        <property-panel>
+            <button id="addEntry" label="com.tngtech.confluence.plugin.multivote.property-panel.add-line"/>
+            <button id="toggleSort" label="com.tngtech.confluence.plugin.multivote.property-panel.toggle-sort"/>
+            <button id="reset" label="com.tngtech.confluence.plugin.multivote.property-panel.reset"/>
+        </property-panel>
+    </xhtml-macro>
+
+    <macro name='multivote' class='${project.groupId}.MultivoteMacro3x'
+        key='multivote-old'>
+        <resource type="velocity" name="help" location="templates/multivote-help.vm">
+            <param name="help-section" value="tables"/>
+        </resource>
+        <category name="confluence-content"/>
+        <parameters>
+            <parameter name="id" type="string" required="true">
+                <alias name=""/>
+            </parameter>
+            <parameter name="sort" type="boolean" required="false" />
+        </parameters>
+    </macro>
+
+    <component key='multivote-service' class="${project.groupId}.DefaultMultiVoteService" name="Multivote Service">
+        <interface>${project.groupId}.MultiVoteService</interface>
+    </component>
+
+    <component key='multivote-macro-service' class="${project.groupId}.MultiVoteMacroService" name="Multivote Macro Service">
+        <interface>${project.groupId}.MultiVoteMacroService</interface>
+    </component>
+
+    <component-import key="contentPropertyManager" interface="com.atlassian.confluence.core.ContentPropertyManager" />
+    <component-import key="userAccessor" interface="com.atlassian.confluence.user.UserAccessor" />
+    <component-import key="permissionManager" interface="com.atlassian.confluence.security.PermissionManager" />
+    <component-import key="contentEntityManager" interface="com.atlassian.confluence.core.ContentEntityManager" />
+    <component-import key="clusterManager" interface="com.atlassian.confluence.cluster.ClusterManager" />
+    <component-import key="xhtmlContent" interface="com.atlassian.confluence.xhtml.api.XhtmlContent" />
+    <component-import key="cacheFactory" interface="com.atlassian.cache.CacheFactory" />
+
+    <rest key="rest-service-resources" path="/multivote" version="1.0">
+        <description>rest service for ajax requests for the multivote macro</description>
+    </rest>
+
+    <web-resource name="XDate" key="xdate">
+        <resource type="download" name="xdate.js" location="javascript/xdate.js" />
+    </web-resource>
+
+    <web-resource name="bootstrap" key="bootstrap">
+        <resource type="download" name="bootstrap.js" location="javascript/bootstrap.js" />
+    </web-resource>
+
+    <web-resource name="Rich Text Editor Features" key="editor">
+        <resource name="example-soy.js" type="download" location="soy/example.soy"/>
+        <resource type="download" name="editor.js" location="javascript/editor.js" />
+
+        <context>editor</context>
+        <context>macro-browser</context>
+        <dependency>confluence.editor.actions:editor-macro-browser</dependency>
+        <dependency>com.atlassian.confluence.tinymceplugin:editor-resources</dependency>
+        <dependency>${project.groupId}.${project.artifactId}:xdate</dependency>
+
+        <transformation extension="js">
+            <transformer key="jsI18n"/>
+        </transformation>
+
+        <transformation extension="soy">
+            <transformer key="soyTransformer"/>
+        </transformation>
+    </web-resource>
+
+    <web-resource name="Resources" key="resources">
+        <description>Provides the Javascript and CSS files</description>
+        <resource name="export-soy.js" type="download" location="soy/export.soy"/>
+        <resource type="download" name="multivote.js" location="javascript/multivote.js" />
+        <resource type="download" name="bootstrap.js" location="javascript/bootstrap.js" />
+
+
+
+        <transformation extension="js">
+            <transformer key="jsI18n"/>
+        </transformation>
+        <transformation extension="soy">
+            <transformer key="soyTransformer"/>
+        </transformation>
+
+        <resource type="download" name="multivote.css" location="css/multivote.css">
+            <property key="content-type" value="text/css" />
+        </resource>
+        <resource type="download" name="bootstrap.css" location="css/bootstrap.css">
+            <property key="content-type" value="text/css" />
+        </resource>
+        <resource name="icon.png" type="download"
+            location="images/icon.png">
+            <property key="content-type" value="image/png" />
+        </resource>
+        <resource name="checkbox_checked.png" type="download"
+            location="templates/extra/images/checkbox_checked.png">
+            <property key="content-type" value="image/png" />
+        </resource>
+        <resource name="img_avatar.png" type="download"
+                  location="templates/extra/images/img_avatar.png">
+            <property key="content-type" value="image/png" />
+        </resource>
+        <resource name="checkbox_unchecked.png" type="download"
+            location="templates/extra/images/checkbox_unchecked.png">
+            <property key="content-type" value="image/png" />
+        </resource>
+        <resource name="roller.gif" type="download"
+            location="templates/extra/images/roller.gif">
+            <property key="content-type" value="image/gif" />
+        </resource>
+    </web-resource>
+</atlassian-plugin>

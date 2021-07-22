@@ -1,0 +1,18 @@
+<tr bgcolor=ffffff>
+<!-- The left-hand table cell should contain usage examples -->
+    <td>
+    <pre>
+{multivote:idUniqueOnPage}
+|| ID || header1 || header2 || header3 ||
+| 08154711 | column1 | column 2 | column3 |
+{multivote}</pre>
+    </td>
+    <td>
+        <p>
+            $action.getText("multivote.description")
+        <ul>
+            <li><b>id:</b> - ID of the vote. Prevents ID-clashes between lines of multiple votes on the same page.</li>
+        </ul>
+        </p>
+    </td>
+</tr>

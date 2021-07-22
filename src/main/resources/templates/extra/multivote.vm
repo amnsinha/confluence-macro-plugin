@@ -1,0 +1,134 @@
+#* @vtlvariable name="tableId" type="java.lang.String" *#
+#* @vtlvariable name="content" type="com.atlassian.confluence.core.ContentEntityObject" *#
+#* @vtlvariable name="headers" type="java.lang.Iterable<com.atlassian.confluence.util.message.Message>" *#
+#* @vtlvariable name="items" type="java.lang.Iterable<com.tngtech.confluence.plugin.data.VoteItem>" *#
+#* @vtlvariable name="multiVote" type="com.tngtech.confluence.plugin.MultiVoteService" *#
+#set($resourcePath="download/resources/com.tngtech.confluence.plugin.multivote:resources") <!-- TODO read from property? -->
+#requireResource("confluence.web.resources:jquery")
+#requireResource("com.tngtech.confluence.plugin.multivote:resources")
+<fieldset class="hidden parameters">
+  <input type="hidden" id="multivotePageId" value="$content.getIdAsString()" />
+  <input type="hidden" id="notInterestedImage" value="$req.contextPath/$resourcePath/checkbox_unchecked.png" />
+  <input type="hidden" id="interestedImage" value="$req.contextPath/$resourcePath/checkbox_checked.png" />
+  <input type="hidden" id="progressImage" value="$req.contextPath/$resourcePath/roller.gif" />
+</fieldset>
+
+<div id="multivote-error-bar" style="position: fixed; top: 12.5%; z-index: 1;"></div>
+<div class="multivote">
+  <div style="display:none" class="aui-toolbar multivote-toolbar">
+    <div class="toolbar-split toolbar-split-left">
+      <ul class="toolbar-group">
+        <li class="toolbar-item">
+          <a class="toolbar-trigger multivote-export-button" href="#" title="">
+            $action.getText('multivote.export-to-csv')
+          </a>
+        </li>
+        <li class="toolbar-item">
+          <a class="toolbar-trigger multivote-toggle-voters-button" href="#" title="">
+            $action.getText('multivote.voter-column')
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <table class="grid confluenceTable multivoteTable" data-tableid="$tableId">
+    <thead>
+      <tr>
+        #foreach ( $header in $headers )
+        <th class='confluenceTh $header.cssClass'>$header.text</th>
+        #end
+      </tr>
+    </thead>
+    <tbody>
+      #foreach ( $item in $items )
+        #set ($interested = $item.isInterested($req.remoteUser))
+        #if ($interested)
+          #set ($classIntr = "interested")
+          #set ($invInterested = "false")
+          #set ($image = "checkbox_checked")
+        #else
+          #set ($classIntr = "notInterested")
+          #set ($invInterested = "true")
+          #set ($image = "checkbox_unchecked")
+        #end
+        <tr class=$classIntr>
+          #foreach ( $field in $item.fields )
+            <td class='confluenceTd'>$field</td>
+          #end
+            <td class='confluenceTd' id="audience.$generalUtil.urlEncode($item.idName)"
+              title="$multiVote.getUserFullNamesAsString($item.audience)">$item.audienceCount
+            </td>
+            <td class='confluenceTd multivoteAudienceColumn'>
+              $multiVote.getUserFullNamesAsHtml($item.audience, $context)
+            </td>
+          #if ($req.remoteUser)
+            <td class='confluenceTd' align="center">
+              <form action="${req.contextPath}$generalUtil.customGetPageUrl($content)" method="post">
+                <input name="multivote.tableId" value="$generalUtil.urlEncode($tableId)" />
+                <input type="hidden" name="multivote.idname" value="$generalUtil.urlEncode($item.idName)" />
+                <input type="hidden" name="multivote.interested" value="$invInterested" />
+                <input type="image" style="background-color:transparent;border:none;padding:0"
+                  id="multivote.$generalUtil.urlEncode($item.idName)" data-interest="$invInterested"
+                  src="$req.contextPath/$resourcePath/${image}.png" width=20 border=0 align="absmiddle" />
+              </form>
+            </td>
+          #end
+        </tr>
+      #end
+    </tbody>
+  </table>
+
+
+
+  <div class="card">
+    <a href="http://localhost:8090/display/IC/Home">
+    <div class="img-contain">
+      <input type="image" src="$req.contextPath/$resourcePath/img_avatar.png" alt="Avatar" style="border-radius: 100%;height:100px; width:100px"/>
+    </div>
+    </a>
+    <div class="container" style="padding: 10px;">
+      <h4>Letter Checked</h4>
+    </div>
+  </div>
+
+
+  <div class="accordion" id="accordionExample">
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingOne">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+        Avinash
+        </button>
+      </h2>
+      <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+          <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingTwo">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          Piyush
+        </button>
+      </h2>
+      <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+          <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingThree">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+          Accordion Item #3
+        </button>
+      </h2>
+      <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+          <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

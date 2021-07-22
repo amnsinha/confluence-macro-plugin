@@ -1,0 +1,44 @@
+{namespace Confluence.Templates.Multivote}
+/**
+ * @param headers
+ * @param rows
+ */
+{template .table}
+<table class="confluenceTable">
+    <tbody>
+        <tr>
+            {foreach $header in $headers}
+                <th class="confluenceTh">{$header}</th>
+            {/foreach}
+        </tr>
+            {foreach $row in $rows}
+                <tr>
+                    {foreach $column in $row}
+                        <td class="confluenceTd">{$column}</td>
+                    {/foreach}
+                </tr>
+            {/foreach}
+    </tbody>
+</table>
+{/template}
+
+/**
+ * @param id
+ */
+{template .exampleMultivote}
+{call .table}
+    {param headers: [
+            'id',
+            getText('com.tngtech.confluence.plugin.multivote.exampleUsage'),
+            getText('com.tngtech.confluence.plugin.multivote.exampleWarning')
+        ]
+    /}
+    {param rows: [[
+            $id,
+            getText('com.tngtech.confluence.plugin.multivote.exampleUsageText'),
+            getText('com.tngtech.confluence.plugin.multivote.exampleWarningText')
+        ],]
+    /}
+{/call}
+<p><br/></p>
+{/template}

@@ -1,0 +1,10 @@
+.classpath
+.project
+target*
+target.confluence4
+.settings
+.*.swp
+.idea
+multivote.iml
+chromedriver.log
+libpeerconnection.log
