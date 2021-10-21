@@ -6,3 +6,6 @@ This is a simple Plugin for [Atlassian Confluence](http://www.atlassian.com/soft
 Bootstrap also included in it
 
 The [Page at the Atlassian Plugin Exchange](https://plugins.atlassian.com/plugins/com.tngtech.confluence.plugin.multivote) contains more information and links.
+
+Creating this for those who is facing some issue to create confluenece plugin.
+
